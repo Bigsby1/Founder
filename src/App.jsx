@@ -1,15 +1,24 @@
-
-import './App.css'
-import Header from './Header.jsx'
-import Matcher from './Matcher.jsx'
+import "./App.css";
+import useRoutes from "./routes";
+import { useAuth } from "./hooks/useAuth";
+import { AuthContext } from "./context/AuthContext";
+import React from "react";
 
 function App() {
+  const {token, login, logout, userID, admin} = useAuth()
+  const isAuthenticated = !!token
+  const isAdmin = !!admin
+  const routes = useRoutes(isAuthenticated, isAdmin)
+
   return (
-    <>
-      <Header />
-      <Matcher />
-    </>
-  )
+    <AuthContext.Provider value={{
+      token, login, logout, userID, isAuthenticated, isAdmin
+    }}>
+      <>
+        { routes }
+      </>
+    </AuthContext.Provider>
+  );
 }
 
-export default App
+export default App;
